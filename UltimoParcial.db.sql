@@ -40,4 +40,24 @@ INSERT INTO "Pedidos" VALUES (1,1,'2026-03-18',110.0);
 INSERT INTO "Productos" VALUES (1,'Camisa',50.0,30);
 INSERT INTO "Productos" VALUES (2,'Pantalon',60.0,25);
 INSERT INTO "Productos" VALUES (3,'Buso',125.0,15);
+
+
+SELECT id, nombre, correo, telefono FROM Clientes;
+
+
+SELECT p.id AS pedido_id,
+       p.fecha,
+       p.total,
+       (SELECT nombre FROM Clientes WHERE id = p.cliente_id) AS cliente
+FROM Pedidos p
+ORDER BY p.id;
+
+
+SELECT dp.pedido_id,
+       (SELECT nombre FROM Productos WHERE id = dp.producto_id) AS producto,
+       dp.cantidad,
+       dp.subtotal
+FROM Detalles_Pedido dp
+ORDER BY dp.pedido_id;
+
 COMMIT;
