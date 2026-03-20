@@ -1,0 +1,27 @@
+# 1.	Listar todos los clientes
+
+SELECT id, nombre, correo, telefono FROM Clientes;
+
+# 2.	Relacion con los pedidos y clientes
+
+SELECT p.id AS pedido_id,
+       p.fecha,
+       p.total,
+       (SELECT nombre FROM Clientes WHERE id = p.cliente_id) AS cliente
+FROM Pedidos p
+ORDER BY p.id;
+
+# 3.	Detalle de Productos por pedidos
+
+SELECT dp.pedido_id AS pedido_id,
+       (SELECT nombre FROM Clientes WHERE id = (
+           SELECT cliente_id FROM Pedidos WHERE id = dp.pedido_id       )) AS cliente,
+       (SELECT nombre FROM Productos WHERE id = dp.producto_id) AS producto,
+       dp.cantidad,
+       dp.subtotalFROM Detalles_Pedido dpORDER BY dp.pedido_id, dp.id;
+
+# 4.	Validación de total
+SELECT p.id as pedido_id,
+	   p.total as total_registrado
+	   coalesce((SELECT SUM(subtotal) FROM Detalles_Pedido WHERE pedido_id = p.id), 0) as total_calculado
+FROM Pedidos p;
